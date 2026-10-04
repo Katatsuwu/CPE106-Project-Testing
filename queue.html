@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cardinal Queue — Queue Monitor</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="queue-page">
+  <main class="queue-screen">
+    <header class="queue-header">
+      <img src="assets/logo.png" alt="Cardinal Queue">
+      <div class="live-pill"><span></span> LIVE</div>
+    </header>
+
+    <section class="now-serving">
+      <p>NOW SERVING</p>
+      <div id="nowServing">A000</div>
+      <span id="windowLabel">WINDOW 1</span>
+    </section>
+
+    <section class="queue-columns">
+      <div class="queue-panel">
+        <h2>WAITING</h2>
+        <div id="waitingList" class="waiting-list"></div>
+      </div>
+
+      <div class="queue-panel user-panel">
+        <h2>CHECK YOUR QUEUE</h2>
+        <div class="check-row">
+          <input id="queueLookup" placeholder="Enter queue number, e.g. A024">
+          <button id="checkBtn">CHECK</button>
+        </div>
+        <div id="lookupResult" class="lookup-result">Enter your queue number to see your status.</div>
+      </div>
+    </section>
+  </main>
+  <script src="js/queue.js"></script>
+</body>
+</html>

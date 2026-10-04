@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cardinal Queue — Kiosk</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="kiosk-page">
+  <main class="screen">
+    <section id="homeView" class="view active">
+      <img class="main-logo" src="assets/logo.png" alt="Cardinal Queue">
+      <h1>Select a service</h1>
+
+      <div class="service-list">
+        <button class="service-btn" data-service="ENROLLMENT">ENROLLMENT</button>
+        <button class="service-btn" data-service="FORM 137">FORM 137</button>
+        <button class="service-btn" data-service="SF9">SF9</button>
+        <button class="service-btn" data-service="OTHER">OTHER</button>
+      </div>
+    </section>
+
+    <section id="formView" class="view">
+      <header class="mini-header">
+        <img src="assets/logo.png" alt="Cardinal Queue">
+        <button id="returnBtn" class="return-btn">RETURN</button>
+      </header>
+
+      <div class="form-wrap">
+        <h2>Queuing Form</h2>
+        <form id="queueForm">
+          <label for="fullName">Full Name</label>
+          <input id="fullName" name="fullName" type="text"
+                 placeholder="e.g. Labazmo T. Timo" autocomplete="name" required>
+
+          <label for="education">Educational Level</label>
+          <select id="education" name="education" required>
+            <option value="" disabled selected>Select an option</option>
+            <option>Senior High School</option>
+            <option>Undergraduate</option>
+            <option>Graduate Studies</option>
+            <option>Faculty / Staff</option>
+            <option>Visitor</option>
+          </select>
+
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email"
+                 placeholder="e.g. juandelacruz@gmail.com" autocomplete="email" required>
+
+          <button class="submit-btn" type="submit">SUBMIT</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="ticketView" class="view">
+      <header class="mini-header">
+        <img src="assets/logo.png" alt="Cardinal Queue">
+        <button id="ticketReturnBtn" class="return-btn">RETURN</button>
+      </header>
+
+      <div class="ticket-card">
+        <p class="ticket-label">YOUR QUEUE NUMBER</p>
+        <div id="ticketNumber" class="ticket-number">A001</div>
+        <p id="ticketService" class="ticket-service">ENROLLMENT</p>
+
+        <div class="ticket-info">
+          <div><span>Name</span><strong id="ticketName">—</strong></div>
+          <div><span>Status</span><strong>WAITING</strong></div>
+        </div>
+
+        <p class="ticket-note">
+          Please keep this queue number. You may monitor the queue through the
+          Cardinal Queue website.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/kiosk.js"></script>
+</body>
+</html>
