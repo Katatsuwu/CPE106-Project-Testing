@@ -4,7 +4,7 @@ const nowServing = document.getElementById("nowServing");
 const waitingList = document.getElementById("waitingList");
 const servingList = document.getElementById("servingList");
 const lookupResult = document.getElementById("lookupResult");
-const windowLabel = document.getElementById("windowLabel");
+const windowLabel = document.getElementById('windowLabel');
 
 function message(text, kind = "") {
   lookupResult.replaceChildren();
@@ -15,7 +15,16 @@ function message(text, kind = "") {
 function paint(records) {
   const serving = records.filter(record => record.status === "Serving").sort((a, b) => String(a.window).localeCompare(String(b.window)));
   const waiting = records.filter(record => record.status === "Waiting").sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+  const serviceCounts = {
+    enrollment: waiting.filter(record => record.service === "Enrollment").length,
+    payment: waiting.filter(record => record.service === "Payment").length,
+    forms: waiting.filter(record => ["Form 137", "SF9", "Other"].includes(record.service)).length,
+  };
+  document.getElementById("countEnrollment").textContent = serviceCounts.enrollment;
+  document.getElementById("countPayment").textContent = serviceCounts.payment;
+  document.getElementById("countForms").textContent = serviceCounts.forms;
   nowServing.textContent = serving.length ? serving[0].queueNumber : "—";
+  nowServing.classList.toggle("is-empty", !serving.length);
   windowLabel.textContent = serving.length
     ? `${serving[0].service} · WINDOW ${serving[0].window}`
     : "No queue is being served";
@@ -36,10 +45,16 @@ function paint(records) {
   }
   for (const record of waiting.slice(0, 12)) {
     const item = document.createElement("div");
-    item.className = "waiting-card";
+    item.className = `waiting-card ${serviceClass(record.service)}`;
     item.textContent = `${record.queueNumber} · ${record.service} · Window ${record.window}`;
     waitingList.append(item);
   }
+}
+
+function serviceClass(service) {
+  if (service === "Payment") return "service-payment";
+  if (["Form 137", "SF9", "Other"].includes(service)) return "service-forms";
+  return "service-enrollment";
 }
 
 async function lookup() {
