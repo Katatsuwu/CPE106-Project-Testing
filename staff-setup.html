@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Set up staff access — Cardinal Queue</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="kiosk-page">
+  <main class="screen">
+    <section class="view active" aria-labelledby="setupTitle">
+      <img class="main-logo" src="assets/logo.png" alt="Cardinal Queue">
+      <div class="form-wrap">
+        <h2 id="setupTitle">Set up staff access</h2>
+        <p id="setupMessage" role="status" aria-live="polite">Checking your invitation…</p>
+        <form id="setupForm" hidden>
+          <label for="newPassword">New password</label>
+          <input id="newPassword" type="password" autocomplete="new-password" minlength="8" required>
+          <label for="confirmPassword">Confirm password</label>
+          <input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required>
+          <button class="submit-btn" type="submit">SAVE PASSWORD</button>
+        </form>
+        <p><a href="index.html" style="color:#fff">Return to the kiosk</a></p>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="js/staff-setup.js"></script>
+</body>
+</html>

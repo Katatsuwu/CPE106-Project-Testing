@@ -6,13 +6,14 @@ Static kiosk and live queue pages for GitHub Pages. `index.html` is the kiosk; `
 
 - Kiosk: <https://katatsuwu.github.io/CPE106-Project-Testing/>
 - Live queue and ticket lookup: <https://katatsuwu.github.io/CPE106-Project-Testing/queue.html>
+- Staff invitation setup: <https://katatsuwu.github.io/CPE106-Project-Testing/staff-setup.html>
 - Source: <https://github.com/Katatsuwu/CPE106-Project-Testing>
 
 GitHub Pages serves the `main` branch repository root. Keep these relative paths intact: `css/`, `js/`, and `assets/`.
 
 The frontend only contains Supabase's public anon key. Never add `admin_config.json`, service-role keys, passwords, or other secrets to this static site.
 
-The Supabase API and starter service list are live. The admin invite still needs to be accepted before staff can sign in. Email alerts are not configured and are not sent yet.
+The Supabase API and starter service list are live. Staff invitations should redirect to `staff-setup.html` to set a password. Email alerts are not configured and are not sent yet.
 
 ## Backend source
 
