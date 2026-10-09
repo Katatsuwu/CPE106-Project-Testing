@@ -143,3 +143,14 @@ form input:focus, form select:focus { border-color: var(--gold); box-shadow: 0 0
   .service-summary article span { font-size: .72rem; }
   .service-summary article strong { font-size: 1rem; }
 }
+
+
+/* Kiosk logo and controls scale together on iPad-sized screens. */
+.main-logo { width: min(100%, 600px); height: auto; object-fit: contain; }
+.service-list { width: min(82%, 480px); }
+@media (min-width: 700px) {
+  .view { width: min(100%, 680px); padding: 42px 48px 36px; }
+  .main-logo { margin-top: 3vh; }
+  .service-list { gap: 16px; }
+  .service-btn { min-height: 70px; font-size: 1.15rem; }
+}
