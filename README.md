@@ -1,20 +1,21 @@
-# Cardinal Queue Website
+# Cardinal Queue
 
-Static kiosk and live queue pages for GitHub Pages. `index.html` is the kiosk; `queue.html` is the TV display and private ticket lookup. Supabase provides the shared queue database and API.
+A touch-friendly Mapúa kiosk, live queue display, personal ticket lookup, and shared Supabase backend.
 
-## Live site
+## Live website
 
-- Kiosk: <https://katatsuwu.github.io/CPE106-Project-Testing/>
-- Live queue and ticket lookup: <https://katatsuwu.github.io/CPE106-Project-Testing/queue.html>
-- Staff invitation setup: <https://katatsuwu.github.io/CPE106-Project-Testing/staff-setup.html>
-- Source: <https://github.com/Katatsuwu/CPE106-Project-Testing>
+- Kiosk: https://katatsuwu.github.io/Cardinal-Queue/
+- Queue monitor and ticket lookup: https://katatsuwu.github.io/Cardinal-Queue/queue.html
+- Staff invitation and password setup: https://katatsuwu.github.io/Cardinal-Queue/staff-setup.html
 
-GitHub Pages serves the `main` branch repository root. Keep these relative paths intact: `css/`, `js/`, and `assets/`.
+The kiosk keeps the design from the original project prototype. The queue monitor uses the proposal-based layout and adapts for phone screens. The separate Python staff console is distributed in the project source package.
 
-The frontend only contains Supabase's public anon key. Never add `admin_config.json`, service-role keys, passwords, or other secrets to this static site.
+## Project source
 
-The Supabase API and starter service list are live. Staff invitations and password recovery links should redirect to `staff-setup.html` to set a password; reset requests are initiated from the Python staff console. The web page does not provide staff management. Email alerts are not configured and are not sent yet.
+This public repository contains the GitHub Pages frontend, including its kiosk, queue monitor, scripts, and image assets. The complete Python console, Supabase schema and Edge Function source, and Gmail relay source are included in the Cardinal Queue source package.
 
-## Backend source
+## Backend and privacy
 
-The complete Python admin app, schema, and Supabase Edge Function source are in the separate `cardinal-queue-source.zip` package.
+Supabase provides authentication, the queue database, and the API. Public pages use the Supabase anon key with row-level security. Never put a service-role key, staff password, or private configuration in this repository. The Python console uses its local admin_config.json file for the project URL and anon key.
+
+GitHub Pages publishes the main branch. Page files use relative paths for CSS, JavaScript, and images.
