@@ -1,62 +1,102 @@
-const homeView = document.getElementById("homeView");
-const formView = document.getElementById("formView");
-const ticketView = document.getElementById("ticketView");
-const queueForm = document.getElementById("queueForm");
+import { call, isSupabaseConfigured } from "./supabase-client.js";
 
+const views = ["homeView", "formView", "ticketView"].map(id => document.getElementById(id));
+const form = document.getElementById("queueForm");
 let selectedService = "";
+let returnTimer = null;
 
-function show(view) {
-  [homeView, formView, ticketView].forEach(v => v.classList.remove("active"));
-  view.classList.add("active");
+function show(viewId) {
+  for (const view of views) view.classList.toggle("active", view.id === viewId);
   window.scrollTo(0, 0);
 }
 
-document.querySelectorAll(".service-btn").forEach(button => {
-  button.addEventListener("click", () => {
-    selectedService = button.dataset.service;
-    show(formView);
-    document.getElementById("fullName").focus();
-  });
-});
-
-document.getElementById("returnBtn").addEventListener("click", () => show(homeView));
-document.getElementById("ticketReturnBtn").addEventListener("click", () => {
-  queueForm.reset();
-  show(homeView);
-});
-
-function nextLocalQueueNumber() {
-  const current = Number(localStorage.getItem("cardinalQueueDemoCounter") || "0") + 1;
-  localStorage.setItem("cardinalQueueDemoCounter", String(current));
-  return "A" + String(current).padStart(3, "0");
+function setMessage(text, error = false) {
+  const el = document.getElementById("ticketMessage");
+  el.textContent = text;
+  el.classList.toggle("error", error);
 }
 
-queueForm.addEventListener("submit", event => {
-  event.preventDefault();
-
-  const name = document.getElementById("fullName").value.trim();
-  const education = document.getElementById("education").value;
-  const email = document.getElementById("email").value.trim();
-  const queueNumber = nextLocalQueueNumber();
-
-  // Demo-only local record. Replace this section with your Firebase write.
-  const queueRecord = {
-    queueNumber,
-    service: selectedService,
-    name,
-    education,
-    email,
-    status: "waiting",
-    createdAt: new Date().toISOString()
-  };
-
-  const records = JSON.parse(localStorage.getItem("cardinalQueueDemoRecords") || "[]");
-  records.push(queueRecord);
-  localStorage.setItem("cardinalQueueDemoRecords", JSON.stringify(records));
-
-  document.getElementById("ticketNumber").textContent = queueNumber;
-  document.getElementById("ticketService").textContent = selectedService;
-  document.getElementById("ticketName").textContent = name;
-
-  show(ticketView);
+function selectService(button) {
+  selectedService = button.dataset.service;
+  show("formView");
+  document.getElementById("fullName").focus();
+}
+document.querySelector(".service-list").addEventListener("click", event => {
+  const button = event.target.closest(".service-btn");
+  if (button) selectService(button);
 });
+document.getElementById("returnBtn").addEventListener("click", () => { form.reset(); show("homeView"); });
+function returnToKiosk() {
+  if (returnTimer) clearTimeout(returnTimer);
+  form.reset();
+  document.getElementById("ticketQr").replaceChildren();
+  show("homeView");
+}
+document.getElementById("ticketReturnBtn").addEventListener("click", returnToKiosk);
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!isSupabaseConfigured) {
+    alert("The kiosk is not connected yet. Add the Supabase project URL and publishable key, then deploy the backend.");
+    return;
+  }
+  const submit = form.querySelector("button[type=submit]");
+  submit.disabled = true;
+  submit.textContent = "REGISTERING…";
+  try {
+    const values = new FormData(form);
+    const { data } = await call("registerQueue", {
+      fullName: String(values.get("fullName")).trim(),
+      education: String(values.get("education")),
+      email: String(values.get("email")).trim(),
+      service: selectedService,
+    });
+    document.getElementById("ticketNumber").textContent = data.queueNumber;
+    document.getElementById("ticketService").textContent = selectedService;
+    document.getElementById("ticketWindow").textContent = `WINDOW ${data.window}`;
+    setMessage("Scan this code now to check your queue from your phone. The kiosk resets in one minute; keep the ticket code private.");
+    const monitorUrl = new URL("queue.html", location.href);
+    monitorUrl.hash = new URLSearchParams({ queue: data.queueNumber, code: data.accessCode, id: data.queueId }).toString();
+    const qr = document.getElementById("ticketQr");
+    qr.replaceChildren();
+    if (window.QRCode?.toCanvas) {
+      const canvas = document.createElement("canvas");
+      qr.append(canvas);
+      await window.QRCode.toCanvas(canvas, monitorUrl.href, { width: 180, margin: 2, errorCorrectionLevel: "M" });
+    } else {
+      const link = document.createElement("a");
+      link.href = monitorUrl.href;
+      link.textContent = "Open your private queue monitor";
+      qr.append(link);
+    }
+    show("ticketView");
+    if (returnTimer) clearTimeout(returnTimer);
+    returnTimer = setTimeout(returnToKiosk, 60000);
+  } catch (error) {
+    alert(error.message || "Registration could not be completed. Please try again.");
+  } finally {
+    submit.disabled = false;
+    submit.textContent = "SUBMIT";
+  }
+});
+
+if (!isSupabaseConfigured) {
+  const banner = document.createElement("p");
+  banner.className = "setup-notice";
+  banner.textContent = "Setup required: Supabase has not been connected. This kiosk will not accept or store registrations yet.";
+  document.getElementById("homeView").append(banner);
+} else {
+  call("listServices").then(({ data }) => {
+    const serviceList = document.querySelector(".service-list");
+    serviceList.replaceChildren();
+    for (const service of data.services.filter(item => item.active)) {
+      const button = document.createElement("button");
+      button.className = "service-btn";
+      button.dataset.service = service.name;
+      button.type = "button";
+      button.textContent = service.name.toUpperCase();
+      serviceList.append(button);
+    }
+    if (!serviceList.childElementCount) serviceList.textContent = "No services are currently available.";
+  }).catch(() => {});
+}

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Cardinal Queue — Kiosk</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="kiosk-page">
@@ -13,10 +14,11 @@
       <h1>Select a service</h1>
 
       <div class="service-list">
-        <button class="service-btn" data-service="ENROLLMENT">ENROLLMENT</button>
-        <button class="service-btn" data-service="FORM 137">FORM 137</button>
+        <button class="service-btn" data-service="Enrollment">ENROLLMENT</button>
+        <button class="service-btn" data-service="Payment">PAYMENT</button>
+        <button class="service-btn" data-service="Form 137">FORM 137</button>
         <button class="service-btn" data-service="SF9">SF9</button>
-        <button class="service-btn" data-service="OTHER">OTHER</button>
+        <button class="service-btn" data-service="Other">OTHER</button>
       </div>
     </section>
 
@@ -64,9 +66,11 @@
         <p id="ticketService" class="ticket-service">ENROLLMENT</p>
 
         <div class="ticket-info">
-          <div><span>Name</span><strong id="ticketName">—</strong></div>
           <div><span>Status</span><strong>WAITING</strong></div>
+          <div><span>Service window</span><strong id="ticketWindow">—</strong></div>
         </div>
+        <div id="ticketQr" class="ticket-qr" aria-label="QR code to monitor this queue"></div>
+        <p id="ticketMessage" class="ticket-note" role="status"></p>
 
         <p class="ticket-note">
           Please keep this queue number. You may monitor the queue through the
@@ -76,6 +80,7 @@
     </section>
   </main>
 
-  <script src="js/kiosk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js" defer></script>
+  <script type="module" src="js/kiosk.js"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cardinal Queue — Queue Monitor</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="queue-page">
@@ -15,8 +16,9 @@
 
     <section class="now-serving">
       <p>NOW SERVING</p>
-      <div id="nowServing">A000</div>
-      <span id="windowLabel">WINDOW 1</span>
+      <div id="nowServing">—</div>
+      <span id="windowLabel">No queue is being served</span>
+      <div id="servingList" class="serving-list" aria-live="polite"></div>
     </section>
 
     <section class="queue-columns">
@@ -28,13 +30,14 @@
       <div class="queue-panel user-panel">
         <h2>CHECK YOUR QUEUE</h2>
         <div class="check-row">
-          <input id="queueLookup" placeholder="Enter queue number, e.g. A024">
+          <input id="queueLookup" placeholder="Queue number" autocomplete="off">
+          <input id="queueCode" placeholder="Ticket code" autocomplete="off" aria-label="Private ticket code from your ticket">
           <button id="checkBtn">CHECK</button>
         </div>
         <div id="lookupResult" class="lookup-result">Enter your queue number to see your status.</div>
       </div>
     </section>
   </main>
-  <script src="js/queue.js"></script>
+  <script type="module" src="js/queue.js"></script>
 </body>
 </html>
