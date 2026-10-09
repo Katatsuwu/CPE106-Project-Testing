@@ -317,3 +317,7 @@ form select:focus {
   .service-summary article span { font-size: .72rem; }
   .service-summary article strong { font-size: 1rem; }
 }
+
+
+/* Keep the logo wider than the service buttons, as in the prototype. */
+.service-list { width: min(74%, 590px); }
