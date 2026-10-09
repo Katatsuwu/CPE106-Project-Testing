@@ -16,6 +16,18 @@ function setMessage(text, error = false) {
   el.classList.toggle("error", error);
 }
 
+function renderPublicQueueQr() {
+  const qr = document.getElementById("ticketQr");
+  const link = document.createElement("a");
+  link.href = "queue.html";
+  link.setAttribute("aria-label", "Open the public live queue monitor");
+  const image = document.createElement("img");
+  image.src = "assets/queue_qr.png?v=public-queue-2";
+  image.alt = "Scan to open the public Cardinal Queue monitor";
+  link.append(image);
+  qr.replaceChildren(link);
+}
+
 function selectService(button) {
   selectedService = button.dataset.service;
   show("formView");
@@ -29,15 +41,7 @@ document.getElementById("returnBtn").addEventListener("click", () => { form.rese
 function returnToKiosk() {
   if (returnTimer) clearTimeout(returnTimer);
   form.reset();
-  const qr = document.getElementById("ticketQr");
-  const link = document.createElement("a");
-  link.href = "queue.html";
-  link.setAttribute("aria-label", "Open the live queue monitor");
-  const image = document.createElement("img");
-  image.src = "assets/queue_qr.png";
-  image.alt = "Scan to open the Cardinal Queue monitor";
-  link.append(image);
-  qr.replaceChildren(link);
+  renderPublicQueueQr();
   show("homeView");
 }
 document.getElementById("ticketReturnBtn").addEventListener("click", returnToKiosk);
@@ -66,18 +70,6 @@ form.addEventListener("submit", async event => {
     setMessage(emailSent
       ? "A copy of your queue details has been sent to your email."
       : "Your queue details email could not be sent. Please keep these ticket details visible.", !emailSent);
-    const monitorUrl = new URL("queue.html", location.href);
-    monitorUrl.hash = new URLSearchParams({ queue: data.queueNumber, code: data.accessCode, id: data.queueId }).toString();
-    const qr = document.getElementById("ticketQr");
-    if (window.QRCode?.toCanvas) {
-      const canvas = document.createElement("canvas");
-      try {
-        await window.QRCode.toCanvas(canvas, monitorUrl.href, { width: 180, margin: 2, errorCorrectionLevel: "M" });
-        qr.replaceChildren(canvas);
-      } catch {
-        // Keep the supplied public monitor QR visible when the CDN generator is unavailable.
-      }
-    }
     show("ticketView");
     if (returnTimer) clearTimeout(returnTimer);
     returnTimer = setTimeout(returnToKiosk, 60000);
@@ -88,6 +80,8 @@ form.addEventListener("submit", async event => {
     submit.textContent = "SUBMIT";
   }
 });
+
+renderPublicQueueQr();
 
 if (!isSupabaseConfigured) {
   const banner = document.createElement("p");
