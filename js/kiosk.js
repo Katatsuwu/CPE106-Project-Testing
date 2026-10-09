@@ -29,7 +29,15 @@ document.getElementById("returnBtn").addEventListener("click", () => { form.rese
 function returnToKiosk() {
   if (returnTimer) clearTimeout(returnTimer);
   form.reset();
-  document.getElementById("ticketQr").replaceChildren();
+  const qr = document.getElementById("ticketQr");
+  const link = document.createElement("a");
+  link.href = "queue.html";
+  link.setAttribute("aria-label", "Open the live queue monitor");
+  const image = document.createElement("img");
+  image.src = "assets/queue_qr.png";
+  image.alt = "Scan to open the Cardinal Queue monitor";
+  link.append(image);
+  qr.replaceChildren(link);
   show("homeView");
 }
 document.getElementById("ticketReturnBtn").addEventListener("click", returnToKiosk);
@@ -54,20 +62,21 @@ form.addEventListener("submit", async event => {
     document.getElementById("ticketNumber").textContent = data.queueNumber;
     document.getElementById("ticketService").textContent = selectedService;
     document.getElementById("ticketWindow").textContent = `WINDOW ${data.window}`;
-    setMessage("Scan this code now to check your queue from your phone. The kiosk resets in one minute; keep the ticket code private.");
+    const emailSent = data.confirmationEmailSent === true;
+    setMessage(emailSent
+      ? "A copy of your queue details has been sent to your email."
+      : "Your queue is saved, but the confirmation email could not be sent. Please keep these ticket details visible.", !emailSent);
     const monitorUrl = new URL("queue.html", location.href);
     monitorUrl.hash = new URLSearchParams({ queue: data.queueNumber, code: data.accessCode, id: data.queueId }).toString();
     const qr = document.getElementById("ticketQr");
-    qr.replaceChildren();
     if (window.QRCode?.toCanvas) {
       const canvas = document.createElement("canvas");
-      qr.append(canvas);
-      await window.QRCode.toCanvas(canvas, monitorUrl.href, { width: 180, margin: 2, errorCorrectionLevel: "M" });
-    } else {
-      const link = document.createElement("a");
-      link.href = monitorUrl.href;
-      link.textContent = "Open your private queue monitor";
-      qr.append(link);
+      try {
+        await window.QRCode.toCanvas(canvas, monitorUrl.href, { width: 180, margin: 2, errorCorrectionLevel: "M" });
+        qr.replaceChildren(canvas);
+      } catch {
+        // Keep the supplied public monitor QR visible when the CDN generator is unavailable.
+      }
     }
     show("ticketView");
     if (returnTimer) clearTimeout(returnTimer);
@@ -89,7 +98,8 @@ if (!isSupabaseConfigured) {
   call("listServices").then(({ data }) => {
     const serviceList = document.querySelector(".service-list");
     serviceList.replaceChildren();
-    for (const service of data.services.filter(item => item.active)) {
+    const originalKioskServices = new Set(["Enrollment", "Form 137", "SF9", "Other"]);
+    for (const service of data.services.filter(item => item.active && originalKioskServices.has(item.name))) {
       const button = document.createElement("button");
       button.className = "service-btn";
       button.dataset.service = service.name;

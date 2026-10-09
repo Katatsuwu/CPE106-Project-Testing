@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Cardinal Queue — Kiosk</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-    <link rel="stylesheet" href="css/style.css?v=cardinal-queue-ui-4">
+  <link rel="stylesheet" href="css/style.css?v=cardinal-queue-ui-5">
   <script>
     const authParams = new URLSearchParams(location.hash.slice(1));
     const authQuery = new URLSearchParams(location.search);
@@ -76,13 +76,13 @@
           <div><span>Status</span><strong>WAITING</strong></div>
           <div><span>Service window</span><strong id="ticketWindow">—</strong></div>
         </div>
-        <div id="ticketQr" class="ticket-qr" aria-label="QR code to monitor this queue"></div>
+        <div id="ticketQr" class="ticket-qr" aria-label="QR code to monitor this queue">
+          <a href="queue.html" aria-label="Open the live queue monitor">
+            <img src="assets/queue_qr.png" alt="Scan to open the Cardinal Queue monitor">
+          </a>
+        </div>
         <p id="ticketMessage" class="ticket-note" role="status"></p>
-
-        <p class="ticket-note">
-          Please keep this queue number. You may monitor the queue through the
-          Cardinal Queue website.
-        </p>
+        <p class="ticket-note ticket-qr-caption">Scan the QR code to view the live queue.</p>
       </div>
     </section>
   </main>

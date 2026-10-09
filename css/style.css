@@ -234,6 +234,21 @@ form select:focus {
   line-height: 1.5;
 }
 
+.ticket-qr {
+  display: grid;
+  place-items: center;
+  min-height: 185px;
+  padding: 10px;
+  margin: 12px auto;
+  background: white;
+  border-radius: 12px;
+}
+
+.ticket-qr a { display: grid; place-items: center; }
+.ticket-qr img, .ticket-qr canvas { display: block; width: 180px; max-width: 100%; height: auto; }
+.ticket-qr-caption { margin: 8px 0 0; }
+.ticket-note.error { color: #ffd8d8; }
+
 /* Queue monitor: the proposal's wide information display with distinct service colors. */
 .queue-page { min-height: 100dvh; background: var(--canvas); color: var(--ink); --red: #c8102e; --red-dark: #8f1024; --gold: #f7bd20; }
 .queue-screen { width: min(1540px, 100%); margin: 0 auto; padding: 0 38px 24px; }
