@@ -321,3 +321,5 @@ form select:focus {
 
 /* Keep the logo wider than the service buttons, as in the prototype. */
 .service-list { width: min(74%, 590px); }
+
+.kiosk-page .service-btn[data-service="Payment"] { display: none; }
