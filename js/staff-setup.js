@@ -7,6 +7,7 @@ const message = document.getElementById("setupMessage");
 const params = new URLSearchParams(location.hash.slice(1));
 const errorDescription = params.get("error_description");
 const errorCode = params.get("error_code");
+const isRecovery = params.get("type") === "recovery";
 
 function show(text, error = false) {
   message.textContent = text;
@@ -22,7 +23,9 @@ if (errorDescription || errorCode) {
   } else if (data.session) {
     history.replaceState(null, "", `${location.pathname}${location.search}`);
     form.hidden = false;
-    show(`Invitation accepted for ${data.session.user.email}. Choose a password to finish setup.`);
+    show(isRecovery
+      ? `Password reset verified for ${data.session.user.email}. Choose a new password.`
+      : `Invitation accepted for ${data.session.user.email}. Choose a password to finish setup.`);
   } else {
     show("No active invitation was found. Ask the administrator to send you a fresh invite.", true);
   }
@@ -41,5 +44,5 @@ form.addEventListener("submit", async event => {
   if (error) return show(error.message, true);
   form.reset();
   form.hidden = true;
-  show("Password saved. You can now sign in to the Cardinal Queue staff console.");
+  show("Password saved. Return to the Cardinal Queue Python staff console and sign in there.");
 });

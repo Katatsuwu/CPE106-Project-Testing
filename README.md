@@ -13,7 +13,7 @@ GitHub Pages serves the `main` branch repository root. Keep these relative paths
 
 The frontend only contains Supabase's public anon key. Never add `admin_config.json`, service-role keys, passwords, or other secrets to this static site.
 
-The Supabase API and starter service list are live. Staff invitations should redirect to `staff-setup.html` to set a password. Email alerts are not configured and are not sent yet.
+The Supabase API and starter service list are live. Staff invitations and password recovery links should redirect to `staff-setup.html` to set a password; reset requests are initiated from the Python staff console. The web page does not provide staff management. Email alerts are not configured and are not sent yet.
 
 ## Backend source
 
