@@ -62,10 +62,10 @@ form.addEventListener("submit", async event => {
     document.getElementById("ticketNumber").textContent = data.queueNumber;
     document.getElementById("ticketService").textContent = selectedService;
     document.getElementById("ticketWindow").textContent = `WINDOW ${data.window}`;
-    const emailSent = data.confirmationEmailSent === true;
+    const emailSent = data.queueDetailsEmailSent === true;
     setMessage(emailSent
       ? "A copy of your queue details has been sent to your email."
-      : "Your queue is saved, but the confirmation email could not be sent. Please keep these ticket details visible.", !emailSent);
+      : "Your queue details email could not be sent. Please keep these ticket details visible.", !emailSent);
     const monitorUrl = new URL("queue.html", location.href);
     monitorUrl.hash = new URLSearchParams({ queue: data.queueNumber, code: data.accessCode, id: data.queueId }).toString();
     const qr = document.getElementById("ticketQr");

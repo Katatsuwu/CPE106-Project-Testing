@@ -17,7 +17,7 @@ async function signRelay(ts: number, message: Record<string, string>) {
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-async function sendNotification(db: any, q: any, kind: "three_away" | "ready" | "ticket_copy", ticketDetails?: { fullName: string; education: string; accessCode: string }) {
+async function sendNotification(db: any, q: any, kind: "three_away" | "ready" | "ticket_details", ticketDetails?: { fullName: string; education: string; accessCode: string }) {
   const relayUrl = Deno.env.get("EMAIL_RELAY_URL");
   const relaySecret = Deno.env.get("EMAIL_RELAY_SECRET");
   if (!relayUrl || !relaySecret) {
@@ -26,18 +26,18 @@ async function sendNotification(db: any, q: any, kind: "three_away" | "ready" | 
   }
   const id = `${q.id}:${kind}`;
   const ready = kind === "ready";
-  const ticketCopy = kind === "ticket_copy";
+  const ticketDetailsEmail = kind === "ticket_details";
   const ticket = q.queue_number;
   const service = q.service;
   const window = q.service_window;
   const monitorUrl = new URL("https://katatsuwu.github.io/Cardinal-Queue/queue.html");
-  if (ticketCopy && ticketDetails) monitorUrl.hash = new URLSearchParams({ queue:ticket, code:ticketDetails.accessCode, id:q.id }).toString();
+  if (ticketDetailsEmail && ticketDetails) monitorUrl.hash = new URLSearchParams({ queue:ticket, code:ticketDetails.accessCode, id:q.id }).toString();
   const message = {
     id,
     to: q.email,
-    subject: ticketCopy ? `Your Cardinal Queue ticket ${ticket}` : ready ? `Ticket ${ticket} is ready — Cardinal Queue` : `Ticket ${ticket}: 3 tickets ahead — Cardinal Queue`,
-    body: ticketCopy
-      ? `Hello ${ticketDetails?.fullName || ""},\n\nHere is a copy of your Cardinal Queue details:\nName: ${ticketDetails?.fullName || ""}\nEducation: ${ticketDetails?.education || ""}\nQueue number: ${ticket}\nService: ${service}\nService window: ${window}\nStatus: Waiting\nEmail: ${q.email}\n\nOpen this private queue link to check your status:\n${monitorUrl.href}\n\nPrivate ticket code: ${ticketDetails?.accessCode || ""}\nKeep this code private. The link contains it so your queue can open directly.`
+    subject: ticketDetailsEmail ? `Your queue details — Cardinal Queue (${ticket})` : ready ? `Ticket ${ticket} is ready — Cardinal Queue` : `Ticket ${ticket}: 3 tickets ahead — Cardinal Queue`,
+    body: ticketDetailsEmail
+      ? `Hello ${ticketDetails?.fullName || ""},\n\nHere are your Cardinal Queue details:\nName: ${ticketDetails?.fullName || ""}\nEducation: ${ticketDetails?.education || ""}\nQueue number: ${ticket}\nService: ${service}\nService window: ${window}\nStatus: Waiting\nEmail: ${q.email}\n\nOpen this private queue link to check your status:\n${monitorUrl.href}\n\nPrivate ticket code: ${ticketDetails?.accessCode || ""}\nKeep this code private. The link contains it so your queue can open directly.`
       : ready
       ? `Your Cardinal Queue ticket ${ticket} for ${service} is ready to be served at Window ${window}. Please go to the window now.`
       : `Your Cardinal Queue ticket ${ticket} for ${service} at Window ${window} is about 3 tickets away. Please get ready. You can follow the live queue at https://katatsuwu.github.io/Cardinal-Queue/queue.html.`,
@@ -115,9 +115,9 @@ Deno.serve(async req => {
       const accessCode=Array.from(crypto.getRandomValues(new Uint8Array(18)),b=>"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"[b&63]).join("");
       const hash=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(accessCode))),b=>b.toString(16).padStart(2,"0")).join("");
       const { data, error } = await db.rpc("register_queue", { p_full_name:fullName,p_education:education,p_email:email,p_service:service,p_access_hash:hash }); if (error) throw error;
-      const confirmationEmailSent = await sendNotification(db, { id:data.queueId, queue_number:data.queueNumber, email, service, service_window:data.window }, "ticket_copy", { fullName, education, accessCode });
+      const queueDetailsEmailSent = await sendNotification(db, { id:data.queueId, queue_number:data.queueNumber, email, service, service_window:data.window }, "ticket_details", { fullName, education, accessCode });
       await sendThreeAwayForLane(db,service,Number(data.window),isoDay());
-      return json({ ...data, accessCode, confirmationEmailSent });
+      return json({ ...data, accessCode, queueDetailsEmailSent });
     }
     if (action === "lookupQueue") {
       const number=clean(body.queueNumber,20).toUpperCase(), code=clean(body.accessCode,80), id=clean(body.queueId,100);

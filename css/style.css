@@ -73,7 +73,7 @@ body {
 }
 
 .service-list {
-  width: min(90%, 590px);
+  width: min(74%, 590px);
   display: flex;
   flex-direction: column;
   gap: 2.2vh;
@@ -237,15 +237,15 @@ form select:focus {
 .ticket-qr {
   display: grid;
   place-items: center;
-  min-height: 185px;
-  padding: 10px;
+  min-height: 0;
+  padding: 0;
   margin: 12px auto;
-  background: white;
-  border-radius: 12px;
+  background: transparent;
 }
 
 .ticket-qr a { display: grid; place-items: center; }
-.ticket-qr img, .ticket-qr canvas { display: block; width: 180px; max-width: 100%; height: auto; }
+.ticket-qr img { display: block; width: 180px; max-width: 100%; height: auto; }
+.ticket-qr canvas { display: block; max-width: 100%; height: auto; }
 .ticket-qr-caption { margin: 8px 0 0; }
 .ticket-note.error { color: #ffd8d8; }
 
@@ -301,7 +301,7 @@ form select:focus {
 @media (min-width: 700px) {
   .view { width: min(100%, 760px); padding-left: 24px; padding-right: 24px; }
   .main-logo { width: min(88vw, 690px); }
-  .service-list { width: min(90%, 590px); }
+  .service-list { width: min(74%, 590px); }
   .service-btn { min-height: 74px; }
 }
 @media (max-width: 600px) {
@@ -333,10 +333,5 @@ form select:focus {
   .service-summary article strong { font-size: 1rem; }
 }
 
-
-/* Keep the logo wider than the service buttons, as in the prototype. */
-.service-list { width: min(74%, 590px); }
-
-.kiosk-page .service-btn[data-service="Payment"] { display: none; }
-
+/* Keep the kiosk menu aligned with the original four-service prototype. */
 .kiosk-page .service-btn:not([data-service="Enrollment"]):not([data-service="Form 137"]):not([data-service="SF9"]):not([data-service="Other"]) { display: none; }
