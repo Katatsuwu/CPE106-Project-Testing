@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { supabaseUrl, supabaseAnonKey } from "./supabase-config.js";
 
-const client = createClient(supabaseUrl, supabaseAnonKey);
+const client = createClient(supabaseUrl, supabaseAnonKey, { auth: { flowType: "implicit" } });
 const form = document.getElementById("setupForm");
 const message = document.getElementById("setupMessage");
 const params = new URLSearchParams(location.hash.slice(1));

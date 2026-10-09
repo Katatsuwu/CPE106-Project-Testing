@@ -6,6 +6,14 @@
   <title>Cardinal Queue — Kiosk</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    const authParams = new URLSearchParams(location.hash.slice(1));
+    const authQuery = new URLSearchParams(location.search);
+    const authType = authParams.get("type") || authQuery.get("type");
+    if (authType === "recovery" || authType === "invite" || authQuery.has("code")) {
+      location.replace(`staff-setup.html${location.search}${location.hash}`);
+    }
+  </script>
 </head>
 <body class="kiosk-page">
   <main class="screen">
