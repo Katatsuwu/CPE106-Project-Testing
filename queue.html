@@ -15,10 +15,15 @@
     </header>
 
     <section class="now-serving">
-      <p>NOW SERVING</p>
-      <div id="nowServing">—</div>
-      <span id="windowLabel">No queue is being served</span>
-      <div id="servingList" class="serving-list" aria-live="polite"></div>
+      <div class="serving-current">
+        <p>NOW SERVING</p>
+        <div id="nowServing">—</div>
+        <span id="windowLabel">No queue is being served</span>
+      </div>
+      <div class="serving-next">
+        <h2>ALSO SERVING</h2>
+        <div id="servingList" class="serving-list" aria-live="polite"></div>
+      </div>
     </section>
 
     <section class="queue-columns">
@@ -37,6 +42,13 @@
         <div id="lookupResult" class="lookup-result">Enter your queue number to see your status.</div>
       </div>
     </section>
+
+    <section class="service-summary" aria-label="Waiting by service">
+      <article class="service-enrollment"><span>ENROLLMENT WAITING</span><strong id="countEnrollment">0</strong></article>
+      <article class="service-payment"><span>PAYMENT WAITING</span><strong id="countPayment">0</strong></article>
+      <article class="service-forms"><span>FORMS WAITING</span><strong id="countForms">0</strong></article>
+    </section>
+    <footer class="queue-footer">Please wait for your queue number to appear, then proceed to the assigned service window.</footer>
   </main>
   <script type="module" src="js/queue.js"></script>
 </body>
