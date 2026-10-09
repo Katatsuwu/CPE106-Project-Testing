@@ -323,3 +323,5 @@ form select:focus {
 .service-list { width: min(74%, 590px); }
 
 .kiosk-page .service-btn[data-service="Payment"] { display: none; }
+
+.kiosk-page .service-btn:not([data-service="Enrollment"]):not([data-service="Form 137"]):not([data-service="SF9"]):not([data-service="Other"]) { display: none; }
