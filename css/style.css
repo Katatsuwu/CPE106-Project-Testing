@@ -251,7 +251,7 @@ form select:focus {
 
 /* Queue monitor: the proposal's wide information display with distinct service colors. */
 .queue-page { min-height: 100dvh; background: var(--canvas); color: var(--ink); --red: #c8102e; --red-dark: #8f1024; --gold: #f7bd20; }
-.queue-screen { width: min(1540px, 100%); margin: 0 auto; padding: 0 38px 24px; }
+.queue-screen { width: 100%; margin: 0; padding: 0 38px 24px; }
 .queue-header { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 136px; margin: 0 -38px 24px; padding: 22px 44px; overflow: hidden; background: linear-gradient(90deg, rgba(103,7,24,.86), rgba(103,7,24,.45)), url("../assets/background.png") center 43% / cover; }
 .queue-header::after { position: absolute; inset: auto 0 0; height: 8px; background: var(--gold); content: ""; }
 .queue-header img { position: relative; z-index: 1; width: min(320px, 45vw); height: auto; }
