@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+node_modules/
+functions/node_modules/
+.firebase/
+.env
+.env.*
+!.env.example
+admin_config.json
+service-account*.json
+*-service-account*.json
+firebase-debug.log
+ui-debug.log
+__pycache__/
+*.py[cod]
+supabase/.temp/
+.env.local

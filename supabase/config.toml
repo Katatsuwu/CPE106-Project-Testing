@@ -1,2 +1,6 @@
 [functions.api]
-verify_jwt = true
+# Authentication and active staff-role checks are performed in the handler
+# with Supabase Auth's getUser(token). Disable the gateway's legacy JWT check
+# to avoid rejecting valid sessions before that code can run. Public kiosk
+# actions remain intentionally callable without a staff session.
+verify_jwt = false

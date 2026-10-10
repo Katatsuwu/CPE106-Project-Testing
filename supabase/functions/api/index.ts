@@ -3,6 +3,18 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 const services = ["Enrollment", "Payment", "Form 137", "SF9", "Other"];
 const clean = (v: unknown, n: number) => String(v ?? "").trim().slice(0, n);
+const errorMessage = (error: unknown) => {
+  if (error instanceof Error && error.message.trim()) return error.message;
+  if (typeof error === "string" && error.trim()) return error;
+  if (error && typeof error === "object") {
+    const detail = error as Record<string, unknown>;
+    for (const field of ["message", "details", "hint", "error_description"]) {
+      if (typeof detail[field] === "string" && detail[field].trim()) return detail[field] as string;
+    }
+    try { return JSON.stringify(error); } catch { /* use the generic message below */ }
+  }
+  return "The request failed unexpectedly.";
+};
 const isoDay = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Manila", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
 const client = () => createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 const queueShape = (q: any) => ({ id:q.id, queueNumber:q.queue_number, queueSequence:q.queue_sequence, userId:q.user_id, fullName:q.full_name, education:q.education, email:q.email, service:q.service, serviceKey:q.service_key, window:q.service_window, status:q.status, dateKey:q.date_key, createdAt:q.created_at, serviceTime:q.service_time, completionTime:q.completion_time, calledBy:q.called_by });
@@ -171,5 +183,5 @@ Deno.serve(async req => {
     }
     if(action==="listLogs") { requireStaff(true);const {data,error}=await db.from("audit_logs").select("*").order("created_at",{ascending:false}).limit(200);if(error)throw error;await audit("logs.view");return json({logs:(data||[]).map((x:any)=>({id:x.id,staffUid:x.staff_uid,role:x.role,action:x.action,recordId:x.record_id,detail:x.detail,createdAt:x.created_at}))}); }
     return json({error:"Unknown action."},404);
-  } catch(e) { return json({error:e instanceof Error?e.message:"Request failed."},400); }
+  } catch(e) { return json({error:errorMessage(e)},400); }
 });

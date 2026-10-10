@@ -4,7 +4,7 @@ const nowServing = document.getElementById("nowServing");
 const waitingList = document.getElementById("waitingList");
 const servingList = document.getElementById("servingList");
 const lookupResult = document.getElementById("lookupResult");
-const windowLabel = document.getElementById('windowLabel');
+const windowLabel = document.getElementById("windowLabel");
 
 function message(text, kind = "") {
   lookupResult.replaceChildren();
